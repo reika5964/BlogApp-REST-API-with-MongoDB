@@ -10,4 +10,4 @@ const mongroose = require("mongoose");
     { timestamps: true}
     );
 
-   module.exports = mongroose.model("Category",CategorySchema) 
+   module.exports = mongroose.model("Category",CategorySchema);
