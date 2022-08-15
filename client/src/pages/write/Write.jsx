@@ -1,28 +1,72 @@
-import "./write.css"
+import { useContext, useState } from "react";
+import "./write.css";
+import axios from "axios";
+import { Context } from "../../context/Context";
 
 export default function Write() {
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [file, setFile] = useState(null);
+  const { user } = useContext(Context);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newPost = {
+      username: user.username,
+      title,
+      desc,
+    };
+    if (file) {
+      const data =new FormData();
+      const filename = Date.now() + file.name;
+      data.append("name", filename);
+      data.append("file", file);
+      newPost.photo = filename;
+      try {
+        await axios.post("/upload", data);
+      } catch (err) {}
+    }
+    try {
+      const res = await axios.post("/posts", newPost);
+      window.location.replace("/post/" + res.data._id);
+    } catch (err) {}
+  };
   return (
     <div className="write">
-          <img 
-            className="writeImg"
-            src="https://img.freepik.com/free-vector/geometric-floral-background-with-grain-texture_79603-1566.jpg?w=900&t=st=1659752245~exp=1659752845~hmac=23298b5f578a4a9a82c34b22edac521389080bd8f10dfc6feb7668ea05b5fc04" 
-            alt="" 
+      {file && (
+        <img className="writeImg" src={URL.createObjectURL(file)} alt="" />
+      )}
+      <form className="writeForm" onSubmit={handleSubmit}>
+        <div className="writeFormGroup">
+          <label htmlFor="fileInput">
+            <i className="writeIcon fas fa-plus"></i>
+          </label>
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: "none" }}
+            onChange={(e) => setFile(e.target.files[0])}
           />
-       <form className="writeForm">
-        <div className="writeFormGroup">
-            <label htmlFor="fileInput">
-              <i className="writeIcon fa-solid fa-plus"></i>
-            </label>
-            <input type="file" id="fileInput" style={{display:'none'} }/>
-            <input type="text" id="fileInput" placeholder="Title" className="writeInput" autoFocus={true}/>
+          <input
+            type="text"
+            placeholder="Title"
+            className="writeInput"
+            autoFocus={true}
+            onChange={e=>setTitle(e.target.value)}
+          />
         </div>
         <div className="writeFormGroup">
-            <textarea placeholder="Tell your story" type="text" className="writeInput writetext">
-
-            </textarea>
+          <textarea
+            placeholder="Tell your story..."
+            type="text"
+            className="writeInput writeText"
+            onChange={e=>setDesc(e.target.value)}
+          ></textarea>
         </div>
-        <button className="writeSubmit">Publish</button>
-       </form>
+        <button className="writeSubmit" type="submit">
+          Publish
+        </button>
+      </form>
     </div>
   );
 }
