@@ -16,14 +16,14 @@ router.put("/:id",async(req,res)=>{
                 {
                 $set: req.body,
                 },
-                {new:true}
+                { new: true }
             );
             res.status(200).json(updateUser);
         } catch (err) {
             res.status(500).json(err);
         }
     }else{
-        res.status(401).json("You can update only your account!")
+        res.status(401).json("You can update only your account!");
     }
 
 });

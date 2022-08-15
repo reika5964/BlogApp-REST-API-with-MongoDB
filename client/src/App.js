@@ -1,16 +1,16 @@
-//import Home from "./pages/home/Home";
-//import Single from "./pages/single/Single";
+import Home from "./pages/home/Home";
+import Single from "./pages/single/Single";
 import Settings from "./pages/settings/Settings";
 import Write from "./pages/write/Write";
 import Topbar from "./components/topbar/Topbar";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import { Routes, Route, Link } from "react-router-dom";
-import Home from "./pages/home/Home";
-import Single from "./pages/single/Single"
+import { useContext } from "react";
+import { Context } from "./context/Context";
 
 function App() {
-  const user = false;
+  const { user } = useContext(Context);
   return (
     <>
       <Topbar/>
